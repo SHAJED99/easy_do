@@ -33,10 +33,12 @@ const Color _primaryLight = Color(0xff8C88CD);
 const Color _scaffoldBackgroundColor = Color(0xffF9F9FF);
 
 const List<Color> defaultGradient = [
+  _scaffoldBackgroundColor,
   Color(0xffFDF7E1),
   Color(0xffCDDAFC),
   Color(0xffF7E1E4),
   Color(0xffFBF3E8),
+  _scaffoldBackgroundColor
 ];
 // //! ------------------------------------------------------------------------------------------------ Text
 get textTheme => GoogleFonts.manropeTextTheme(Typography.englishLike2018.apply(fontSizeFactor: 1.sp));
