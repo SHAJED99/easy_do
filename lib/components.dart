@@ -7,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 // const baseCompanyName = "GTR";
 // const projectName = "Halda";
 
-// const baseLink = "https://3mz085wg-7074.asse.devtunnels.ms/api/";
-// const baseLinkAuth = "https://gtrbd.net/chitraupdateapi/api/Auth/";
+const baseLink = "https://api-todo-list.jotno.dev/";
+const baseLinkAuth = "https://api-todo-list.jotno.dev/";
 // const imageBaseLink = "https://gtrbd.net/Halda/";
 
 // //! ------------------------------------------------------------------------------------------------ Sizes
@@ -25,7 +25,7 @@ const maxBoxWidth = 400.0;
 // //! ------------------------------------------------------------------------------------------------ Time
 const defaultSplashScreenShow = Duration(seconds: 3);
 const defaultDuration = Duration(milliseconds: 500);
-// const apiCallTimeOut = Duration(seconds: 30);
+const apiCallTimeOut = Duration(seconds: 30);
 // const otpWaiting = Duration(seconds: 10);
 
 // //! ------------------------------------------------------------------------------------------------ Color
@@ -60,14 +60,14 @@ ThemeData get lightTheme => ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.light),
     );
 
-ThemeData get darkTheme => ThemeData(
-      scaffoldBackgroundColor: scaffoldBackgroundColor.customInverseColor,
-      useMaterial3: true,
-      textTheme: textTheme,
-      buttonTheme: buttonTheme,
-      appBarTheme: appBarTheme,
-      colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.dark),
-    );
+// ThemeData get darkTheme => ThemeData(
+//       scaffoldBackgroundColor: scaffoldBackgroundColor.customInverseColor,
+//       useMaterial3: true,
+//       textTheme: textTheme,
+//       buttonTheme: buttonTheme,
+//       appBarTheme: appBarTheme,
+//       colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.dark),
+//     );
 
     
 

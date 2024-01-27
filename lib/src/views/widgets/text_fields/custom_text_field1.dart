@@ -44,7 +44,7 @@ class CustomTextField1 extends StatefulWidget {
     this.enable = true,
     this.readOnly = false,
     this.border,
-    this.isCollapsed = false,
+    this.isCollapsed = true,
     this.boxConstraints,
     this.isDense = true,
     this.contentPadding,

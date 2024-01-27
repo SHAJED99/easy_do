@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       splitScreenMode: true,
       builder: (context, child) => GetMaterialApp(
         theme: lightTheme,
-        darkTheme: darkTheme,
+        // darkTheme: darkTheme,
         debugShowCheckedModeBanner: false,
         initialBinding: InitializedBinding(),
         scrollBehavior: const MaterialScrollBehavior().copyWith(dragDevices: {
