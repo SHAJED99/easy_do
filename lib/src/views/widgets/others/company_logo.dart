@@ -1,3 +1,4 @@
+import 'package:easy_do/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -6,14 +7,16 @@ class CompanyLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(Theme.of(context).brightness == Brightness.light ? "lib/assets/logos/logo_big.svg" : "lib/assets/logos/logo_big.svg");
+    final theme = Theme.of(context);
+    // return SvgPicture.asset(Theme.of(context).brightness == Brightness.light ? "lib/assets/logos/logo_full.svg" : "lib/assets/logos/logo_full.svg");
 
-    //   // colorFilter: Theme.of(context).brightness == Brightness.light
-    //   //     ? null
-    //   //     : ColorFilter.mode(
-    //   //         Theme.of(context).colorScheme.primary,
-    //   //         BlendMode.srcIn,
-    //   //       ),
-    // return Image.asset("lib/assets/logos/logo_big.png");
+    return Container(
+      padding: EdgeInsets.all(defaultPadding / 2),
+      decoration: BoxDecoration(
+        color: theme.brightness == Brightness.light ? null : scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(defaultPadding / 2),
+      ),
+      child: Image.asset("lib/assets/logos/logo_full.png"),
+    );
   }
 }

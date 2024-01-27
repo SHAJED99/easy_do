@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class AuthenticationScreenController extends GetxController {
   final DataController _controller = Get.find();
   final RxBool isSplashScreenDone = false.obs;
+  final RxBool isLogin = true.obs;
 
   void initApp() {
     // _controller.runApp().then((_) {

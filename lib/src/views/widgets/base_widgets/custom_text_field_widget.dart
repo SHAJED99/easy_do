@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:easy_do/src/views/widgets/base_widgets/custom_animated_size_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
@@ -52,7 +54,7 @@ class CustomTextFormField extends StatefulWidget {
     this.textAlignVertical = TextAlignVertical.center,
     this.isCollapsed = false,
     this.floatingLabelBehavior,
-    this.isDense = false,
+    this.isDense = true,
 
     //Functions
     this.onFocusChange,
@@ -138,6 +140,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   bool firstTimeTap = false;
   List<String> searchProductList = [];
   Timer? debounce;
+  late EdgeInsetsGeometry contentPadding;
+  late double height;
 
   @override
   void initState() {
@@ -145,6 +149,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     textEditingController = widget.textEditingController ?? TextEditingController();
     hintText = widget.hintText;
     borderRadius = widget.borderRadius ?? BorderRadius.circular(8);
+
     if (widget.initialValue != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         textEditingController.text = widget.initialValue!;
@@ -182,20 +187,45 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget? _setIcon(Widget? icon) {
     if (icon == null) return null;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        icon
-      ],
+    return SizedBox(
+      height: Theme.of(context).buttonTheme.height,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon
+        ],
+      ),
+    );
+  }
+
+  Widget? widgetReplacement(Widget? wez, EdgeInsetsGeometry padding) {
+    // print(contentPadding.horizontal);
+
+    if (wez == null) return SizedBox(width: padding.horizontal);
+
+    // widget.boxConstraints.minWidth ?? BoxConstraints(minWidth: Theme.of(context).buttonTheme.height),
+
+    return Container(
+      // const BoxConstraints(minWidth: 16)
+      // (widget.boxConstraints?.minWidth ??
+      // color: Colors.amber,
+      margin: EdgeInsets.symmetric(horizontal: padding.horizontal / 2),
+      constraints: BoxConstraints(minWidth: padding.horizontal),
+      child: wez,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    height = widget.boxConstraints?.minHeight ?? Theme.of(context).buttonTheme.height;
+    contentPadding = widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp);
+
     return Focus(
       onFocusChange: (value) {
         firstTimeTap = false;
+        // if (!value) FocusScope.of(context).unfocus();
+
         if (mounted) setState(() => isFocused = value);
         if (widget.onFocusChange != null) widget.onFocusChange!(value);
       },
@@ -286,44 +316,56 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
         decoration: InputDecoration(
           isDense: widget.isDense,
+          // isDense: true,
           isCollapsed: widget.isCollapsed,
           hintText: hintText,
           label: widget.label,
           labelText: widget.labelText,
           labelStyle: widget.labelStyle,
           floatingLabelBehavior: widget.floatingLabelBehavior,
-          constraints: widget.boxConstraints ?? BoxConstraints(minHeight: Theme.of(context).buttonTheme.height),
+          constraints: widget.boxConstraints ?? BoxConstraints(minHeight: height),
           prefix: widget.prefix,
           suffix: widget.suffix,
-          prefixIcon: showLoadingIcon(widget.showPrefixLoadingIcon) ?? _setIcon(widget.prefixIcon),
-          suffixIcon: showLoadingIcon(widget.showSuffixLoadingIcon) ?? _setIcon(widget.suffixIcon),
+          suffixIconConstraints: const BoxConstraints(),
+          prefixIconConstraints: const BoxConstraints(),
+          prefixIcon: SizedBox(
+            height: height,
+            child: CustomAnimatedSize(
+              alignment: Alignment.centerLeft,
+              child: widgetReplacement(showLoadingIcon(widget.showPrefixLoadingIcon) ?? _setIcon(widget.prefixIcon), contentPadding),
+            ),
+          ),
+          suffixIcon: CustomAnimatedSize(
+            alignment: Alignment.centerLeft,
+            child: widgetReplacement(showLoadingIcon(widget.showSuffixLoadingIcon) ?? _setIcon(widget.suffixIcon), contentPadding),
+          ),
           filled: widget.fillColor == null ? false : true,
           fillColor: widget.fillColor,
-          hintStyle: !error ? widget.hintStyle ?? TextStyle(color: Theme.of(context).colorScheme.primary.withOpacity(0.5)) : widget.errorStyle ?? widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error),
+          hintStyle: !error ? widget.hintStyle ?? TextStyle(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)) : widget.errorStyle ?? widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error),
           errorStyle: const TextStyle(height: 0),
-          contentPadding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          contentPadding: contentPadding,
           // contentPadding: EdgeInsets.zero,
-          enabledBorder: widget.enabledBorder ??
+          enabledBorder: widget.enabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
               OutlineInputBorder(
                 borderRadius: borderRadius,
-                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
               ),
-          focusedBorder: widget.focusedBorder ??
+          focusedBorder: widget.focusedBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary)) ??
               OutlineInputBorder(
                 borderRadius: borderRadius,
                 borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
               ),
-          errorBorder: widget.errorBorder ??
+          errorBorder: widget.errorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)) ??
               OutlineInputBorder(
                 borderRadius: borderRadius,
                 borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
               ),
-          focusedErrorBorder: widget.focusedErrorBorder ??
+          focusedErrorBorder: widget.focusedErrorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
               OutlineInputBorder(
                 borderRadius: borderRadius,
                 borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
               ),
-          disabledBorder: widget.disabledBorder ??
+          disabledBorder: widget.disabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1))) ??
               OutlineInputBorder(
                 borderRadius: borderRadius,
                 borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),

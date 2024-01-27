@@ -16,7 +16,7 @@ get baseScreenSize => const Size(360, 800);
 get defaultPadding => 24.sp;
 get defaultBoxHeight => defaultPadding * 2;
 // const paginationPageSize = 10;
-// const maxBoxWidth = 400.0;
+const maxBoxWidth = 400.0;
 
 // //* Border
 // get borderWidth1 => 1.sp;
@@ -30,15 +30,15 @@ const defaultDuration = Duration(milliseconds: 500);
 
 // //! ------------------------------------------------------------------------------------------------ Color
 const Color _primaryLight = Color(0xff8C88CD);
-const Color _scaffoldBackgroundColor = Color(0xffF9F9FF);
+const Color scaffoldBackgroundColor = Color(0xffF9F9FF);
 
 const List<Color> defaultGradient = [
-  _scaffoldBackgroundColor,
+  scaffoldBackgroundColor,
   Color(0xffFDF7E1),
   Color(0xffCDDAFC),
   Color(0xffF7E1E4),
   Color(0xffFBF3E8),
-  _scaffoldBackgroundColor
+  scaffoldBackgroundColor
 ];
 // //! ------------------------------------------------------------------------------------------------ Text
 get textTheme => GoogleFonts.manropeTextTheme(Typography.englishLike2018.apply(fontSizeFactor: 1.sp));
@@ -52,7 +52,7 @@ get appBarTheme => AppBarTheme(
 
 // //! ------------------------------------------------------------------------------------------------ Theme
 ThemeData get lightTheme => ThemeData(
-      scaffoldBackgroundColor: _scaffoldBackgroundColor,
+      scaffoldBackgroundColor: scaffoldBackgroundColor,
       useMaterial3: true,
       textTheme: textTheme,
       buttonTheme: buttonTheme,
@@ -61,7 +61,7 @@ ThemeData get lightTheme => ThemeData(
     );
 
 ThemeData get darkTheme => ThemeData(
-      scaffoldBackgroundColor: _scaffoldBackgroundColor.customInverseColor,
+      scaffoldBackgroundColor: scaffoldBackgroundColor.customInverseColor,
       useMaterial3: true,
       textTheme: textTheme,
       buttonTheme: buttonTheme,
