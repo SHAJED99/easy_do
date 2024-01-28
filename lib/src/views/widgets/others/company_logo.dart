@@ -15,7 +15,7 @@ class CompanyLogo extends StatelessWidget {
         color: theme.brightness == Brightness.light ? null : scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(defaultPadding / 2),
       ),
-      // child: Image.asset("lib/assets/logos/logo_full.png"),
+      child: Image.asset("lib/assets/logos/logo_full.png"),
     );
   }
 }

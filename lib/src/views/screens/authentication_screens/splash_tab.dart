@@ -80,7 +80,7 @@ class _SplashTabState extends State<SplashTab> {
                             constraints: BoxConstraints(minHeight: theme.buttonTheme.height * 2 + (defaultPadding * 2)),
                             padding: EdgeInsets.only(
                               bottom: defaultPadding,
-                              top: defaultPadding + (!expandedFields.value ? defaultPadding : MediaQuery.of(context).padding.top),
+                              top: defaultPadding + (expandedFields.value ? defaultPadding : MediaQuery.of(context).padding.top),
                             ),
                             decoration: BoxDecoration(
                               borderRadius: expandedFields.value ? null : BorderRadius.vertical(bottom: Radius.circular(defaultPadding)),

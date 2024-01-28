@@ -2,6 +2,7 @@ import 'package:easy_do/components.dart';
 import 'package:easy_do/src/controllers/screen_controllers/authentication_screen_controller.dart';
 import 'package:easy_do/src/controllers/services/dev_functions/dev_auto_fill_button.dart';
 import 'package:easy_do/src/controllers/services/functions/form_validation.dart';
+import 'package:easy_do/src/views/screens/dashboard_screens/dashboard_wrapper_screen.dart';
 import 'package:easy_do/src/views/widgets/base_widgets/custom_animated_size_widget.dart';
 import 'package:easy_do/src/views/widgets/others/custom_icon.dart';
 import 'package:easy_do/src/views/widgets/text_fields/custom_text_field1.dart';
@@ -295,6 +296,10 @@ class _SubmitButton extends StatelessWidget {
           if (!isValid) return false;
 
           return await _controller.login();
+        },
+        onDone: (isSuccess) {
+          if (isSuccess == null || !isSuccess) return;
+          Get.offAll(() => const DashboardWrapperScreen());
         },
         child: Text(_controller.isLogin.value ? "Sign In" : "Sign Up"),
       ),
