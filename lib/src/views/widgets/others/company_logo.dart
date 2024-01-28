@@ -1,6 +1,5 @@
 import 'package:easy_do/components.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class CompanyLogo extends StatelessWidget {
   const CompanyLogo({super.key});
@@ -16,7 +15,7 @@ class CompanyLogo extends StatelessWidget {
         color: theme.brightness == Brightness.light ? null : scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(defaultPadding / 2),
       ),
-      child: Image.asset("lib/assets/logos/logo_full.png"),
+      // child: Image.asset("lib/assets/logos/logo_full.png"),
     );
   }
 }

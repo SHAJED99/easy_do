@@ -2,7 +2,7 @@ import 'package:easy_do/src/controllers/data_controllers/database_handler.dart';
 import 'package:easy_do/src/controllers/services/api/api_services.dart';
 import 'package:easy_do/src/controllers/services/error_handlers/error_handler.dart';
 import 'package:easy_do/src/models/response_models/user_response_model.dart';
-import 'package:easy_do/src/views/screens/authentication_screens/splash_screen.dart';
+import 'package:easy_do/src/views/screens/authentication_screens/splash_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -44,9 +44,9 @@ class DataController extends GetxController {
   }
 
   // App Setting
-  Future<void> _appSettingTask() async => _currentThere();
+  Future<void> _appSettingTask() async => _currentTheme();
 
-  void _currentThere() {
+  void _currentTheme() {
     if (localData.localDataModel.appSetting.value.isDarkMode == null) {
       Get.changeThemeMode(ThemeMode.system);
     } else {
@@ -54,11 +54,13 @@ class DataController extends GetxController {
     }
   }
 
+  void changeTheme({bool? isDarkMode}) => localData.localDataModel.appSetting.value = localData.localDataModel.appSetting.value.copyWith(isDarkMode: isDarkMode);
+
   // User
   Future<void> _userTask() async {
     if (isLogin()) {
     } else {
-      if (_isInit) Get.offAll(() => const SplashScreen()); // Login out
+      if (_isInit) Get.offAll(() => const SplashTab()); // Login out
     }
   }
 
@@ -72,9 +74,9 @@ class DataController extends GetxController {
   }
 
   //! ---------------------------------------------------------------------------------------------- Login Screen
-  Future<bool> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password, Map<String, dynamic>? map}) async {
     UserResponseModel? res;
-    await _errorHandler.errorHandler(function: () async => res = await _apiServices.login(email, password));
+    await _errorHandler.errorHandler(function: () async => res = await _apiServices.login(email, password, map: map));
     if (res == null) return false;
     localData.localDataModel.user.value = res!;
     return true;

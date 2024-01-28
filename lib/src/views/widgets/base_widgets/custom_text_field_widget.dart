@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_do/components.dart';
 import 'package:easy_do/src/views/widgets/base_widgets/custom_animated_size_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,6 +56,9 @@ class CustomTextFormField extends StatefulWidget {
     this.isCollapsed = false,
     this.floatingLabelBehavior,
     this.isDense = true,
+    this.showDetailError = true,
+    this.errorTextStyle,
+    this.errorColor,
 
     //Functions
     this.onFocusChange,
@@ -65,6 +69,7 @@ class CustomTextFormField extends StatefulWidget {
     this.onChanged,
     this.onChangedProcessing,
     this.errorCheck,
+    this.errorBuilder,
   });
 
   final BoxConstraints? boxConstraints;
@@ -115,6 +120,18 @@ class CustomTextFormField extends StatefulWidget {
   final bool isCollapsed;
   final bool isDense;
   final FloatingLabelBehavior? floatingLabelBehavior;
+  final bool showDetailError;
+
+  /// Use showDetailError = true
+  /// Default: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.error, fontWeight: FontWeight.bold)
+  final TextStyle? errorTextStyle;
+
+  /// Use showDetailError = true
+  /// Default: Theme.of(context).colorScheme.error
+  final Color? errorColor;
+
+  /// Use showDetailError = true
+  final Widget Function(String message)? errorBuilder;
 
   //Functions
   final Function(bool isFocused)? onFocusChange;
@@ -124,7 +141,7 @@ class CustomTextFormField extends StatefulWidget {
   final void Function()? onTap;
   final void Function(String value)? onChanged;
   final Future<void>? Function(String value)? onChangedProcessing;
-  final void Function(bool error)? errorCheck;
+  final void Function(bool error, String message)? errorCheck;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -136,6 +153,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   late String hintText;
   late BorderRadius borderRadius;
   bool error = false;
+  String? message;
   bool isIdle = true;
   bool firstTimeTap = false;
   List<String> searchProductList = [];
@@ -216,162 +234,190 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     );
   }
 
+  Widget errorChild() {
+    if (error && widget.showDetailError && message != null) {
+      return Text(
+        message!,
+        textAlign: widget.textAlign,
+        style: widget.errorTextStyle ?? Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.errorColor ?? Theme.of(context).colorScheme.error, fontWeight: FontWeight.bold),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     height = widget.boxConstraints?.minHeight ?? Theme.of(context).buttonTheme.height;
     contentPadding = widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp);
 
-    return Focus(
-      onFocusChange: (value) {
-        firstTimeTap = false;
-        // if (!value) FocusScope.of(context).unfocus();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Focus(
+          onFocusChange: (value) {
+            firstTimeTap = false;
+            // if (!value) FocusScope.of(context).unfocus();
 
-        if (mounted) setState(() => isFocused = value);
-        if (widget.onFocusChange != null) widget.onFocusChange!(value);
-      },
-      child: TextFormField(
-        textAlignVertical: widget.textAlignVertical,
-        controller: textEditingController,
-        focusNode: widget.focusNode,
-        textCapitalization: widget.textCapitalization,
-        keyboardType: widget.keyboardType,
-        minLines: widget.minLines,
-        maxLines: widget.obscureText ? 1 : widget.maxLines,
-        maxLength: widget.maxLength,
-        textAlign: widget.textAlign,
-        autofocus: widget.autofocus,
-        autocorrect: widget.autocorrect,
-        enabled: widget.enabled,
-        readOnly: widget.readOnly,
-        cursorColor: widget.cursorColor ?? Theme.of(context).colorScheme.primary,
-        obscureText: widget.obscureText,
-        obscuringCharacter: widget.obscuringCharacter,
-        autofillHints: widget.autofillHints,
-        style: widget.style ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+            if (mounted) setState(() => isFocused = value);
+            if (widget.onFocusChange != null) widget.onFocusChange!(value);
+          },
+          child: TextFormField(
+            textAlignVertical: widget.textAlignVertical,
+            controller: textEditingController,
+            focusNode: widget.focusNode,
+            textCapitalization: widget.textCapitalization,
+            keyboardType: widget.keyboardType,
+            minLines: widget.minLines,
+            maxLines: widget.obscureText ? 1 : widget.maxLines,
+            maxLength: widget.maxLength,
+            textAlign: widget.textAlign,
+            autofocus: widget.autofocus,
+            autocorrect: widget.autocorrect,
+            enabled: widget.enabled,
+            readOnly: widget.readOnly,
+            cursorColor: widget.cursorColor ?? Theme.of(context).colorScheme.primary,
+            obscureText: widget.obscureText,
+            obscuringCharacter: widget.obscuringCharacter,
+            autofillHints: widget.autofillHints,
+            style: widget.style ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
 
-        //! Functions
-        onEditingComplete: () {
-          if (widget.onComplete != null) widget.onComplete!(textEditingController.text);
-        },
-        onTapOutside: (PointerDownEvent pointerDownEvent) {
-          FocusScope.of(context).unfocus();
-          if (widget.onTapOutside != null) widget.onTapOutside!(pointerDownEvent);
-        },
-        onChanged: (value) {
-          //* On change without processing
-          if (widget.onChanged != null) widget.onChanged!(value);
+            //! Functions
+            onEditingComplete: () {
+              if (widget.onComplete != null) widget.onComplete!(textEditingController.text);
+            },
+            onTapOutside: (PointerDownEvent pointerDownEvent) {
+              FocusScope.of(context).unfocus();
+              if (widget.onTapOutside != null) widget.onTapOutside!(pointerDownEvent);
+            },
+            onChanged: (value) {
+              //* On change without processing
+              if (widget.onChanged != null) widget.onChanged!(value);
 
-          //* On change with processing
-          if (widget.onChangedProcessing != null) {
-            if (debounce?.isActive ?? false) debounce?.cancel();
-            debounce = Timer(
-              widget.onChangeDebouncer,
-              () async {
-                searchProductList.add(value);
-                if (isIdle && searchProductList.isNotEmpty) {
-                  String searchingProduct = searchProductList.last;
-                  searchProductList = [];
-                  if (mounted) setState(() => isIdle = false);
-                  await widget.onChangedProcessing!(searchingProduct);
-                  if (mounted) setState(() => isIdle = true);
-                }
-              },
-            );
-          }
-          if (error) {
-            hintText = widget.hintText;
-            error = false;
-            if (widget.errorCheck != null) widget.errorCheck!(error);
-          }
-          if (mounted) setState(() {});
-        },
-        onTap: () {
-          if (widget.fullTextSelection && !firstTimeTap) {
-            textEditingController.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: textEditingController.value.text.length,
-            );
-            firstTimeTap = true;
-          }
-          if (widget.onTap != null) widget.onTap!();
-          if (error) {
-            hintText = widget.hintText;
-            error = false;
-            if (widget.errorCheck != null) widget.errorCheck!(error);
-          }
-          if (mounted) setState(() {});
-        },
-        validator: (value) {
-          if (widget.validator == null) return null;
-          String? s = widget.validator!(value);
-          if (s == null) return null;
-          error = true;
-          if (widget.errorCheck != null) widget.errorCheck!(error);
-          textEditingController.clear();
-          hintText = s;
-          if (mounted) setState(() {});
-          return "";
-        },
-        //! ------------------------------------------
+              //* On change with processing
+              if (widget.onChangedProcessing != null) {
+                if (debounce?.isActive ?? false) debounce?.cancel();
+                debounce = Timer(
+                  widget.onChangeDebouncer,
+                  () async {
+                    searchProductList.add(value);
+                    if (isIdle && searchProductList.isNotEmpty) {
+                      String searchingProduct = searchProductList.last;
+                      searchProductList = [];
+                      if (mounted) setState(() => isIdle = false);
+                      await widget.onChangedProcessing!(searchingProduct);
+                      if (mounted) setState(() => isIdle = true);
+                    }
+                  },
+                );
+              }
+              if (error) {
+                hintText = widget.hintText;
+                error = false;
+                if (widget.errorCheck != null) widget.errorCheck!(error, "");
+              }
+              if (mounted) setState(() {});
+            },
+            onTap: () {
+              if (widget.fullTextSelection && !firstTimeTap) {
+                textEditingController.selection = TextSelection(
+                  baseOffset: 0,
+                  extentOffset: textEditingController.value.text.length,
+                );
+                firstTimeTap = true;
+              }
+              if (widget.onTap != null) widget.onTap!();
+              if (error) {
+                hintText = widget.hintText;
+                error = false;
+                if (widget.errorCheck != null) widget.errorCheck!(error, "");
+              }
+              if (mounted) setState(() {});
+            },
+            validator: (value) {
+              message = null;
+              if (mounted) setState(() {});
 
-        decoration: InputDecoration(
-          isDense: widget.isDense,
-          // isDense: true,
-          isCollapsed: widget.isCollapsed,
-          hintText: hintText,
-          label: widget.label,
-          labelText: widget.labelText,
-          labelStyle: widget.labelStyle,
-          floatingLabelBehavior: widget.floatingLabelBehavior,
-          constraints: widget.boxConstraints ?? BoxConstraints(minHeight: height),
-          prefix: widget.prefix,
-          suffix: widget.suffix,
-          suffixIconConstraints: const BoxConstraints(),
-          prefixIconConstraints: const BoxConstraints(),
-          prefixIcon: SizedBox(
-            height: height,
-            child: CustomAnimatedSize(
-              alignment: Alignment.centerLeft,
-              child: widgetReplacement(showLoadingIcon(widget.showPrefixLoadingIcon) ?? _setIcon(widget.prefixIcon), contentPadding),
+              if (widget.validator == null) return null;
+              message = widget.validator!(value);
+              if (message == null) return null;
+              error = true;
+              if (widget.errorCheck != null) widget.errorCheck!(error, message!);
+
+              if (widget.showDetailError || widget.errorBuilder != null) {
+              } else {
+                textEditingController.clear();
+                hintText = message!;
+              }
+
+              if (mounted) setState(() {});
+              return "";
+            },
+            //! ------------------------------------------
+            decoration: InputDecoration(
+              isDense: widget.isDense,
+              isCollapsed: widget.isCollapsed,
+              hintText: hintText,
+              label: widget.label,
+              labelText: widget.labelText,
+              labelStyle: widget.labelStyle,
+              floatingLabelBehavior: widget.floatingLabelBehavior,
+              constraints: widget.boxConstraints ?? BoxConstraints(minHeight: height),
+              prefix: widget.prefix,
+              suffix: widget.suffix,
+              suffixIconConstraints: const BoxConstraints(),
+              prefixIconConstraints: const BoxConstraints(),
+              prefixIcon: SizedBox(
+                height: height,
+                child: CustomAnimatedSize(
+                  alignment: Alignment.centerLeft,
+                  child: widgetReplacement(showLoadingIcon(widget.showPrefixLoadingIcon) ?? _setIcon(widget.prefixIcon), contentPadding),
+                ),
+              ),
+              suffixIcon: CustomAnimatedSize(
+                alignment: Alignment.centerLeft,
+                child: widgetReplacement(showLoadingIcon(widget.showSuffixLoadingIcon) ?? _setIcon(widget.suffixIcon), contentPadding),
+              ),
+              filled: widget.fillColor == null ? false : true,
+              fillColor: widget.fillColor,
+              hintStyle: !error ? widget.hintStyle ?? TextStyle(color: Theme.of(context).colorScheme.primary.withOpacity(0.5)) : widget.errorStyle ?? widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error),
+              errorStyle: const TextStyle(height: 0),
+              contentPadding: contentPadding,
+              // contentPadding: EdgeInsets.zero,
+              enabledBorder: widget.enabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5))) ??
+                  OutlineInputBorder(
+                    borderRadius: borderRadius,
+                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
+                  ),
+              focusedBorder: widget.focusedBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary)) ??
+                  OutlineInputBorder(
+                    borderRadius: borderRadius,
+                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
+                  ),
+              errorBorder: widget.errorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)) ??
+                  OutlineInputBorder(
+                    borderRadius: borderRadius,
+                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+                  ),
+              focusedErrorBorder: widget.focusedErrorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
+                  OutlineInputBorder(
+                    borderRadius: borderRadius,
+                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                  ),
+              disabledBorder: widget.disabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1))) ??
+                  OutlineInputBorder(
+                    borderRadius: borderRadius,
+                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+                  ),
             ),
           ),
-          suffixIcon: CustomAnimatedSize(
-            alignment: Alignment.centerLeft,
-            child: widgetReplacement(showLoadingIcon(widget.showSuffixLoadingIcon) ?? _setIcon(widget.suffixIcon), contentPadding),
-          ),
-          filled: widget.fillColor == null ? false : true,
-          fillColor: widget.fillColor,
-          hintStyle: !error ? widget.hintStyle ?? TextStyle(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)) : widget.errorStyle ?? widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error),
-          errorStyle: const TextStyle(height: 0),
-          contentPadding: contentPadding,
-          // contentPadding: EdgeInsets.zero,
-          enabledBorder: widget.enabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
-              OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
-              ),
-          focusedBorder: widget.focusedBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary)) ??
-              OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
-              ),
-          errorBorder: widget.errorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)) ??
-              OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
-              ),
-          focusedErrorBorder: widget.focusedErrorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
-              OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
-              ),
-          disabledBorder: widget.disabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1))) ??
-              OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
-              ),
         ),
-      ),
+        CustomAnimatedSize(
+          alignment: Alignment.topCenter,
+          widthFactor: 1,
+          child: widget.errorBuilder != null ? widget.errorBuilder!(message ?? "") : Padding(padding: EdgeInsets.only(top: defaultPadding / 4), child: errorChild()),
+        ),
+      ],
     );
   }
 }

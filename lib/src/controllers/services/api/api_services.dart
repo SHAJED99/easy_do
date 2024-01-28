@@ -1,6 +1,5 @@
 import 'package:easy_do/src/controllers/services/api/http_call.dart';
 import 'package:easy_do/src/models/response_models/user_response_model.dart';
-import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -9,19 +8,20 @@ class ApiServices {
   ApiServices() : _httpCall = HttpCall();
 
   // //! ---------------------------------------------------------------------------------------------- Login
-  Future<UserResponseModel?> login(String email, String password) async {
-    String httpLink = "user/login";
+  Future<UserResponseModel?> login(String email, String password, {Map<String, dynamic>? map}) async {
+    String httpLink = map == null ? "user/login" : "user/register";
 
-    http.Response res = await _httpCall.post(
-      httpLink,
-      isAuthServer: true,
-      body: {
-        "email": email,
-        "password": password
-      },
-    );
+    Map<String, dynamic> sendData = {
+      "email": email,
+      "password": password
+    };
 
-    if (res.statusCode != 200) throw res;
+    if (map != null) sendData.addAll(map);
+
+    http.Response res = await _httpCall.post(httpLink, isAuthServer: true, body: sendData);
+
+    if (map == null && res.statusCode != 200) throw res;
+    if (map != null && res.statusCode != 201) throw res;
     return UserResponseModel.fromJson(res.body);
   }
 

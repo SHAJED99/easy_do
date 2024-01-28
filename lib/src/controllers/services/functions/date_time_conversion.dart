@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:intl/intl.dart';
 
 extension DateTimeExtensions on DateTime {
   // String get customWeekDayAbbreviation => (_weekDay[weekday] ?? "").customCutString(ending: 2).customCapitalizeFirstLetter;

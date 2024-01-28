@@ -19,10 +19,11 @@ class DevAutoFillButton extends StatelessWidget {
     // );
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         for (int i = 0; i < onPressed.length; i++)
           OnProcessButtonWidget(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
+            margin: EdgeInsets.symmetric(horizontal: 4, vertical: MediaQuery.of(context).padding.bottom + 4),
             alignment: Alignment.center,
             constraints: const BoxConstraints(minHeight: 24 * 1.5, maxWidth: 24 * 1.5),
             contentPadding: EdgeInsets.zero,

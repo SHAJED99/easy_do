@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:easy_do/src/controllers/data_controllers/data_controller.dart';
-import 'package:easy_do/src/controllers/services/api/api_services.dart';
 import 'package:easy_do/src/controllers/services/error_handlers/app_exceptions.dart';
 import 'package:easy_do/src/controllers/services/functions/string_formatter.dart';
-import 'package:easy_do/src/controllers/services/user_message/snackbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -13,7 +11,6 @@ import 'package:tuple/tuple.dart';
 
 class ErrorHandler {
   late final DataController _controller;
-  late final ApiServices _apiServices;
   ErrorHandler() {
     _controller = Get.find();
   }

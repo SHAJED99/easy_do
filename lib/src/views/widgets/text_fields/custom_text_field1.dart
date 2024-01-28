@@ -1,6 +1,7 @@
 import 'package:easy_do/components.dart';
 import 'package:easy_do/src/views/widgets/base_widgets/custom_text_field_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
@@ -25,6 +26,9 @@ class CustomTextField1 extends StatefulWidget {
   final bool isDense;
   final BoxConstraints? boxConstraints;
   final EdgeInsetsGeometry? contentPadding;
+  final dynamic Function(bool isFocused)? onFocusChange;
+  final bool showDetailError;
+  final Widget Function(String message)? errorBuilder;
 
   const CustomTextField1({
     super.key,
@@ -48,6 +52,9 @@ class CustomTextField1 extends StatefulWidget {
     this.boxConstraints,
     this.isDense = true,
     this.contentPadding,
+    this.onFocusChange,
+    this.showDetailError = true,
+    this.errorBuilder,
   });
 
   @override
@@ -70,9 +77,14 @@ class _CustomTextField1State extends State<CustomTextField1> {
   Widget build(BuildContext context) {
     return Obx(
       () => CustomTextFormField(
+        fullTextSelection: false,
         contentPadding: widget.contentPadding,
         isDense: widget.isDense,
         isCollapsed: widget.isCollapsed,
+        errorBuilder: widget.errorBuilder,
+        // isDense: true,
+        // isCollapsed: true,
+        showDetailError: widget.showDetailError,
         readOnly: widget.readOnly,
         enabled: widget.enable,
         autofocus: widget.autofocus,
@@ -84,8 +96,9 @@ class _CustomTextField1State extends State<CustomTextField1> {
         maxLines: widget.maxLine,
         minLines: widget.minLine,
         boxConstraints: widget.boxConstraints,
-        onFocusChange: (isFocused) => {
-          if (widget.obscureText && !isFocused) showText.value = false
+        onFocusChange: (isFocused) {
+          if (widget.onFocusChange != null) widget.onFocusChange!(isFocused);
+          // if (widget.obscureText && !isFocused) showText.value = false;
         },
         //! Eye button
         suffixIcon: !widget.obscureText
@@ -103,7 +116,7 @@ class _CustomTextField1State extends State<CustomTextField1> {
                     ),
                   ),
         validator: widget.validator,
-        errorCheck: (error) {
+        errorCheck: (error, message) {
           s.value = "";
           errorStatus.value = error;
         },
@@ -137,7 +150,7 @@ class _CustomTextField1State extends State<CustomTextField1> {
                       BlendMode.srcIn,
                     ),
                   ),
-                  if (widget.prefixChild != null) SizedBox(width: defaultPadding * 10),
+                  if (widget.prefixChild != null) SizedBox(width: 8.sp),
                   if (widget.prefixChild != null) widget.prefixChild!,
                 ],
               ),

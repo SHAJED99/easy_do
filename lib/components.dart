@@ -2,6 +2,7 @@ import 'package:easy_do/src/controllers/services/functions/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tuple/tuple.dart';
 
 // //! ------------------------------------------------------------------------------------------------ Company Information
 // const baseCompanyName = "GTR";
@@ -17,10 +18,11 @@ get defaultPadding => 24.sp;
 get defaultBoxHeight => defaultPadding * 2;
 // const paginationPageSize = 10;
 const maxBoxWidth = 400.0;
+const Curve defaultCurve = Curves.easeInOut;
 
 // //* Border
-// get borderWidth1 => 1.sp;
-// get borderWidth2 => 2.sp;
+get borderWidth1 => 1.sp;
+get borderWidth2 => 2.sp;
 
 // //! ------------------------------------------------------------------------------------------------ Time
 const defaultSplashScreenShow = Duration(seconds: 3);
@@ -60,30 +62,17 @@ ThemeData get lightTheme => ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.light),
     );
 
-// ThemeData get darkTheme => ThemeData(
-//       scaffoldBackgroundColor: scaffoldBackgroundColor.customInverseColor,
-//       useMaterial3: true,
-//       textTheme: textTheme,
-//       buttonTheme: buttonTheme,
-//       appBarTheme: appBarTheme,
-//       colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.dark),
-//     );
-
-    
+ThemeData get darkTheme => ThemeData(
+      scaffoldBackgroundColor: scaffoldBackgroundColor.customInverseColor,
+      useMaterial3: true,
+      textTheme: textTheme,
+      buttonTheme: buttonTheme,
+      appBarTheme: appBarTheme,
+      colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.dark),
+    );
 
 // //! ------------------------------------------------------------------------------------------------ Validation
-// const int phoneNumberLength = 11;
-// const int nameMinLength = 8;
-// const int passwordMinLength = 8;
-// const int addressLength = 10;
-// const String emailValidationPattern = r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$';
-// const int otpValidationLength = 5;
-
-// // options.SignIn.RequireConfirmedEmail = true;
-// //  options.Password.RequireDigit = true;
-// //  options.Password.RequireLowercase = true;
-// //  options.Password.RequiredLength = 8;
-// //  options.Password.RequireUppercase = false;
-// //  options.Password.RequireNonAlphanumeric = false;
-// //  options.Lockout.MaxFailedAccessAttempts = 5;
-// //  options.User.RequireUniqueEmail = true;
+const int nameMinLength = 8;
+const int passwordMinLength = 8;
+const String emailValidationPattern = r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$';
+const Tuple2<int, int> ageLimit = Tuple2(16, 100);

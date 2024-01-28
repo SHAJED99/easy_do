@@ -26,7 +26,7 @@ class CustomAnimatedSize extends StatelessWidget {
       widthFactor: widthFactor,
       heightFactor: heightFactor,
       child: AnimatedSize(
-        curve: Curves.linear,
+        curve: defaultCurve,
         clipBehavior: clipBehavior,
         alignment: alignment,
         duration: duration,

@@ -1,4 +1,3 @@
-import 'package:easy_do/components.dart';
 import 'package:easy_do/src/controllers/data_controllers/data_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,20 +7,22 @@ class AuthenticationScreenController extends GetxController {
   final RxBool isLogin = true.obs;
   final loginFormKey = GlobalKey<FormState>();
 
-  String get version => _controller.packageInfo.value?.version ?? "";
+  @override
+  void onClose() {
+    super.onClose();
+    nameC.dispose();
+    ageC.dispose();
+    emailC.dispose();
+    passwordC.dispose();
+    rePasswordC.dispose();
+  }
 
-  final RxBool isInit = false.obs;
-  final RxBool isSplashScreenDone = false.obs;
-
-  void initApp() {
-    _controller.initApp().then((_) {
-      isInit.value = true;
-      gotoHome();
-    });
-    Future.delayed(defaultSplashScreenShow).then((_) {
-      isSplashScreenDone.value = true;
-      gotoHome();
-    });
+  resetFields() {
+    nameC.clear();
+    ageC.clear();
+    emailC.clear();
+    passwordC.clear();
+    rePasswordC.clear();
   }
 
   devFunction1() {
@@ -30,40 +31,30 @@ class AuthenticationScreenController extends GetxController {
     passwordC.text = "12345678";
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-    nameC.dispose();
-    ageC.dispose();
-    emailC.dispose();
-    passwordC.dispose();
+  devFunction2() {
+    isLogin.value = false;
+    nameC.text = "abc abc abc";
+    emailC.text = "abc_${DateTime.now().microsecond}@gmail.com";
+    ageC.text = "18";
+    passwordC.text = "12345678";
+    rePasswordC.text = "12345678";
   }
 
-  resetFields() {
-    nameC.clear();
-    ageC.clear();
-    emailC.clear();
-    passwordC.clear();
-  }
-
-  gotoHome() {
-    // if (isSplashScreenDone.value && isInit.value) {
-    //   if (_controller.isLogin()) {
-    //     // Get.offAll(() => const DashboardScreenWrapper());
-    //     // Get.offAll(() => const SettingScreenWrapper());
-    //   } else {
-    //     // expendLogin.value = true;
-    //     // greetingText.value = "Welcome to $projectName";
-    //   }
-    // }
-  }
-
-  TextEditingController nameC = TextEditingController();
-  TextEditingController ageC = TextEditingController();
-  TextEditingController emailC = TextEditingController();
-  TextEditingController passwordC = TextEditingController();
+  final TextEditingController nameC = TextEditingController();
+  final TextEditingController ageC = TextEditingController();
+  final TextEditingController emailC = TextEditingController();
+  final TextEditingController passwordC = TextEditingController();
+  final TextEditingController rePasswordC = TextEditingController();
 
   Future<bool> login() async {
-    return await _controller.login(email: emailC.text.trim(), password: passwordC.text.trim());
+    Map<String, dynamic>? sendData;
+    if (!isLogin.value) {
+      sendData = {
+        "name": nameC.text.trim(),
+        "age": ageC.text.trim(),
+      };
+    }
+
+    return await _controller.login(email: emailC.text.trim(), password: passwordC.text.trim(), map: sendData);
   }
 }
