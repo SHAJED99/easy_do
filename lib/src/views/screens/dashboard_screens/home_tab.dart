@@ -141,7 +141,9 @@ class _TaskCardTile extends StatelessWidget {
       margin: EdgeInsets.only(bottom: defaultPadding / 4),
       color: t.colorScheme.background,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //! Heading
           Row(
             children: [
               Expanded(
@@ -191,6 +193,14 @@ class _TaskCardTile extends StatelessWidget {
               ),
             ],
           ),
+          ____size(2),
+          //! Decoration
+          Text(
+            task.description,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: t.textTheme.bodyLarge?.copyWith(color: t.colorScheme.onBackground),
+          )
         ],
       ),
     );
