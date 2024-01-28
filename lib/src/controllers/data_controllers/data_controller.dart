@@ -1,6 +1,7 @@
 import 'package:easy_do/src/controllers/data_controllers/database_handler.dart';
 import 'package:easy_do/src/controllers/services/api/api_services.dart';
 import 'package:easy_do/src/controllers/services/error_handlers/error_handler.dart';
+import 'package:easy_do/src/models/response_models/task_list_response_model.dart';
 import 'package:easy_do/src/models/response_models/user_response_model.dart';
 import 'package:easy_do/src/views/screens/authentication_screens/splash_tab.dart';
 import 'package:flutter/material.dart';
@@ -80,5 +81,12 @@ class DataController extends GetxController {
     if (res == null) return false;
     localData.localDataModel.user.value = res!;
     return true;
+  }
+
+  //! ---------------------------------------------------------------------------------------------- Dashboard
+  Future<TaskListResponseModel?> getTaskList() async {
+    TaskListResponseModel? res;
+    await _errorHandler.errorHandler(function: () async => res = await _apiServices.getTaskList());
+    return res;
   }
 }

@@ -10,6 +10,6 @@ class TaskTab extends StatefulWidget {
 class _TaskTabState extends State<TaskTab> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container();
   }
 }

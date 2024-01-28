@@ -38,4 +38,5 @@ flutter:
   assets:
     - lib/assets/logos/
     - lib/assets/icons/
+    - lib/assets/card_image/
 

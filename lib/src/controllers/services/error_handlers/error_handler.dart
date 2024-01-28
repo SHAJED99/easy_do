@@ -15,12 +15,11 @@ class ErrorHandler {
     _controller = Get.find();
   }
 
-  Future<ResponseModel> errorHandler({bool showError = true, required Future Function() function, bool isAuthService = false}) async {
+  Future<ResponseModel> errorHandler({bool showError = true, required Future Function() function}) async {
     //!
     Tuple2<ErrorType, int?> res = await _errorHandler(
       showError: showError,
       function: () async => await function(),
-      isAuthService: isAuthService,
     );
 
     //! -------------------------------------------------------------------------------------------- Refreshing token
@@ -36,7 +35,7 @@ class ErrorHandler {
     // return ResponseModel(isSuccess: true, statusCode: 200);
   }
 
-  Future<Tuple2<ErrorType, int?>> _errorHandler({bool showError = true, required Function function, required bool isAuthService}) async {
+  Future<Tuple2<ErrorType, int?>> _errorHandler({bool showError = true, required Function function}) async {
     try {
       await function();
       return const Tuple2(ErrorType.done, null); // !  --------------------------------------------- Done

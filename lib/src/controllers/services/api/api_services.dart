@@ -1,4 +1,5 @@
 import 'package:easy_do/src/controllers/services/api/http_call.dart';
+import 'package:easy_do/src/models/response_models/task_list_response_model.dart';
 import 'package:easy_do/src/models/response_models/user_response_model.dart';
 
 import 'package:http/http.dart' as http;
@@ -7,7 +8,7 @@ class ApiServices {
   late final HttpCall _httpCall;
   ApiServices() : _httpCall = HttpCall();
 
-  // //! ---------------------------------------------------------------------------------------------- Login
+  //! ---------------------------------------------------------------------------------------------- Login
   Future<UserResponseModel?> login(String email, String password, {Map<String, dynamic>? map}) async {
     String httpLink = map == null ? "user/login" : "user/register";
 
@@ -23,6 +24,16 @@ class ApiServices {
     if (map == null && res.statusCode != 200) throw res;
     if (map != null && res.statusCode != 201) throw res;
     return UserResponseModel.fromJson(res.body);
+  }
+
+  //! ---------------------------------------------------------------------------------------------- Dashboard
+  Future<TaskListResponseModel> getTaskList() async {
+    String httpLink = "task";
+
+    http.Response res = await _httpCall.get(httpLink);
+    if (res.statusCode != 200) throw res;
+
+    return TaskListResponseModel.fromJson(res.body);
   }
 
   // Future<void> emailConfirmationResendOTP({required String email, required String code, required bool resend}) async {

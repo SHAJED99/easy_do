@@ -1,11 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:intl/intl.dart';
 
 extension DateTimeExtensions on DateTime {
   // String get customWeekDayAbbreviation => (_weekDay[weekday] ?? "").customCutString(ending: 2).customCapitalizeFirstLetter;
   // String get custom_MMMM => DateFormat('MMMM').format(this);
   // String get custom_hh_mm_a => DateFormat('hh:mm a').format(this);
-  // String get custom_d_MMM_EEE => DateFormat('d MMM : EEE').format(this);
+  String get custom_d_MMM_yyyy_EEE => DateFormat('d MMM yyyy : EEE').format(this);
 
   // bool customIsSameDay({DateTime? otherDate}) {
   //   DateTime today = otherDate ?? DateTime.now();
