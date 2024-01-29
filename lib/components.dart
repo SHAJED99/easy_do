@@ -46,8 +46,9 @@ const List<Color> defaultGradient = [
 get textTheme => GoogleFonts.manropeTextTheme(Typography.englishLike2018.apply(fontSizeFactor: 1.sp));
 
 get buttonTheme => ButtonThemeData(height: defaultBoxHeight);
-get appBarTheme => AppBarTheme(
+AppBarTheme appBarTheme({isDarkMode = false}) => AppBarTheme(
       toolbarHeight: defaultBoxHeight,
+      backgroundColor: !isDarkMode ? scaffoldBackgroundColor : scaffoldBackgroundColor.customInverseColor,
       surfaceTintColor: Colors.transparent,
       centerTitle: false,
     );
@@ -58,7 +59,7 @@ ThemeData get lightTheme => ThemeData(
       useMaterial3: true,
       textTheme: textTheme,
       buttonTheme: buttonTheme,
-      appBarTheme: appBarTheme,
+      appBarTheme: appBarTheme(),
       colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.light),
     );
 
@@ -67,7 +68,7 @@ ThemeData get darkTheme => ThemeData(
       useMaterial3: true,
       textTheme: textTheme,
       buttonTheme: buttonTheme,
-      appBarTheme: appBarTheme,
+      appBarTheme: appBarTheme(isDarkMode: true),
       colorScheme: ColorScheme.fromSeed(seedColor: _primaryLight, brightness: Brightness.dark),
     );
 

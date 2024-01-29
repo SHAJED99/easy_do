@@ -1,10 +1,8 @@
 import 'package:easy_do/components.dart';
 import 'package:easy_do/src/controllers/screen_controllers/dashboard_wrapper_screen_controller.dart';
-import 'package:easy_do/src/controllers/services/functions/colors.dart';
 import 'package:easy_do/src/controllers/services/functions/date_time_conversion.dart';
-import 'package:easy_do/src/controllers/services/functions/int_conversion.dart';
-import 'package:easy_do/src/controllers/services/functions/string_formatter.dart';
 import 'package:easy_do/src/models/pojo_classes/task_model.dart';
+import 'package:easy_do/src/views/screens/other_screens/task_information.dart';
 import 'package:easy_do/src/views/widgets/buttons/button_1.dart';
 import 'package:easy_do/src/views/widgets/others/custom_icon.dart';
 import 'package:easy_do/src/views/widgets/others/custom_loading_bar.dart';
@@ -12,6 +10,8 @@ import 'package:easy_do/src/views/widgets/others/custom_size_builder.dart';
 import 'package:easy_do/src/views/widgets/others/dashboard_title.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_popup_window_widget/on_popup_window_widget.dart';
+import 'package:on_process_button_widget/on_process_button_widget.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -102,10 +102,11 @@ class _TaskSummaryTile extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            t.colorScheme.background.withOpacity(1),
-            t.colorScheme.background.withOpacity(0.7),
-            t.colorScheme.background.withOpacity(0.3),
-            t.colorScheme.background.withOpacity(0.1),
+            t.colorScheme.background,
+            t.colorScheme.background.withOpacity(0.8),
+            t.colorScheme.background.withOpacity(0.6),
+            t.colorScheme.background.withOpacity(0.4),
+            t.colorScheme.background.withOpacity(0.2),
             Colors.transparent,
           ],
         ),
@@ -136,10 +137,13 @@ class _TaskCardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final dStyle = t.textTheme.labelLarge?.copyWith(color: t.colorScheme.onBackground.withOpacity(0.7), fontWeight: FontWeight.bold, height: 1);
+    final borderColor = task.completed ? t.colorScheme.primary : t.colorScheme.onBackground;
+    final iconColor = task.completed ? t.colorScheme.background : t.colorScheme.onBackground;
 
     return Button1(
       margin: EdgeInsets.only(bottom: defaultPadding / 4),
       color: t.colorScheme.background,
+      onTap: () => Get.to(() => TaskInformationScreen(task: task)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -191,10 +195,43 @@ class _TaskCardTile extends StatelessWidget {
                   ],
                 ),
               ),
+
+              //! Status Button
+              OnProcessButtonWidget(
+                iconColor: iconColor,
+                height: defaultPadding,
+                width: defaultPadding * 1.5,
+                borderRadius: BorderRadius.circular(defaultPadding / 2),
+                constraints: const BoxConstraints(),
+                contentPadding: EdgeInsets.all(defaultPadding / 8),
+                backgroundColor: borderColor.withOpacity(task.completed ? 1 : 0.2),
+                border: Border.all(width: borderWidth2, strokeAlign: BorderSide.strokeAlignOutside, color: borderColor.withOpacity(task.completed ? 1 : 0.7)),
+                onTap: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => OnPopupWindowWidget(
+                      title: Text("Really want to mark as ${task.completed ? "Incomplete" : "Complete"}"),
+                      footer: OnProcessButtonWidget(
+                        expanded: false,
+                        contentPadding: EdgeInsets.symmetric(horizontal: defaultPadding),
+                        child: const Text("Okay"),
+                      ),
+                      defaultTextAlign: TextAlign.start,
+                      defaultTextStyle: dStyle,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Task: ${task.title}"),
+                      ),
+                    ),
+                  );
+                  return;
+                },
+                child: FittedBox(child: Icon(Icons.done, color: iconColor)),
+              )
             ],
           ),
           ____size(2),
-          //! Decoration
+          //! Description
           Text(
             task.description,
             maxLines: 3,
@@ -206,5 +243,3 @@ class _TaskCardTile extends StatelessWidget {
     );
   }
 }
-
-// Task Summary

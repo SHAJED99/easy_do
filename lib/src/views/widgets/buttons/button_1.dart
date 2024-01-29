@@ -15,6 +15,8 @@ class Button1 extends StatelessWidget {
     this.margin,
     this.elevation = 0,
     this.shadowColor,
+    this.onTap,
+    this.borderColor,
   });
   final String? backgroundImage;
   final double? width;
@@ -27,6 +29,8 @@ class Button1 extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final double elevation;
   final Color? shadowColor;
+  final void Function()? onTap;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +42,15 @@ class Button1 extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(defaultPadding / 2),
         child: Container(
-          decoration: BoxDecoration(image: backgroundImage == null ? null : DecorationImage(image: AssetImage(backgroundImage!), fit: BoxFit.cover, alignment: Alignment.center)),
+          decoration: BoxDecoration(
+            borderRadius: borderColor == null ? null : BorderRadius.circular(defaultPadding / 2),
+            border: borderColor == null ? null : Border.all(width: borderWidth2, color: borderColor!),
+            image: backgroundImage == null ? null : DecorationImage(image: AssetImage(backgroundImage!), fit: BoxFit.cover, alignment: Alignment.center),
+          ),
           child: Material(
             color: color ?? Colors.transparent,
             child: InkWell(
-              onTap: () {},
+              onTap: onTap,
               child: AnimatedContainer(
                 duration: defaultDuration,
                 width: width,

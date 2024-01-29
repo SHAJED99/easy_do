@@ -208,14 +208,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  on_popup_window_widget:
+    dependency: "direct main"
+    description:
+      name: on_popup_window_widget
+      sha256: c76e032030ea83c62ee76ce9ca19c95f64bec40c7551b2f26c43562a3ebbaf04
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   on_process_button_widget:
     dependency: "direct main"
     description:
       name: on_process_button_widget
-      sha256: "2e8c92cb30c567faf7bcc4d591e54324e40d608951dd1a8a82754efbce4dc25d"
+      sha256: "4b7f466ee72913932427b759578fb159e09b876ccd09a12028ef051598e07ce0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   package_info_plus:
     dependency: "direct main"
     description:
